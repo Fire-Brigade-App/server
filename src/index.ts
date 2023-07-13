@@ -10,6 +10,7 @@ app.use(express.json());
 // app.use(express.urlencoded({ extended: true }));
 
 app.get("/", (req, res) => {
+  console.log("Everything works fine");
   res.json({ message: "ok" });
 });
 

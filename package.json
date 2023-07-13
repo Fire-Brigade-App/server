@@ -7,7 +7,7 @@
     "start": "tsc && node ./dist/index.js"
   },
   "author": "Maksymilian.org",
-  "license": "CC BY-NC-SA 4.0",
+  "license": "CC-BY-NC-SA-4.0",
   "dependencies": {
     "axios": "^1.4.0",
     "dotenv": "^16.3.1",
