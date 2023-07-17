@@ -11,8 +11,8 @@ type Profile = "driving" | "car" | "bike" | "foot";
 export const getRoute = async (toLocation: LocationObject) => {
   const profile: Profile = "driving";
 
-  const fromCoords = `${cached_fire_brigade_lon},${cached_fire_brigade_lat}`;
-  const toCoords = `${toLocation.coords.longitude},${toLocation.coords.latitude}`;
+  const fromCoords = `${toLocation.coords.longitude},${toLocation.coords.latitude}`;
+  const toCoords = `${cached_fire_brigade_lon},${cached_fire_brigade_lat}`;
   const coordinates = `${fromCoords};${toCoords}`;
 
   const url = `${ROUTE_SERVICE_URL}/${profile}/${coordinates}`;
