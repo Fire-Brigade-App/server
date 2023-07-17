@@ -11,7 +11,16 @@ type Profile = "driving" | "car" | "bike" | "foot";
 export const getRoute = async (toLocation: LocationObject) => {
   const profile: Profile = "driving";
 
-  const fromCoords = `${toLocation.coords.longitude},${toLocation.coords.latitude}`;
+  const fromCoords =
+    toLocation?.coords?.longitude && toLocation?.coords?.latitude
+      ? `${toLocation?.coords?.longitude},${toLocation?.coords?.latitude}`
+      : null;
+
+  if (!fromCoords) {
+    console.error("Missing location information: ", toLocation);
+    return;
+  }
+
   const toCoords = `${cached_fire_brigade_lon},${cached_fire_brigade_lat}`;
   const coordinates = `${fromCoords};${toCoords}`;
 
