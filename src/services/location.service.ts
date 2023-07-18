@@ -5,16 +5,24 @@ import { getRoute } from "./route.service";
 import { updateUser } from "./user.service";
 
 const handleUpdate = async (userUid: string, location: LocationObject) => {
-  const brigadesIds = location.brigadesIds;
+  const { brigadesIds, preventRouteDurationMeasurement } = location;
 
   try {
-    const route = await getRoute(location);
-    if (!route) {
-      return;
+    let route, duration, status, time;
+
+    // In some cases, i.e. when the user location is very similar to the
+    // previous one, we don't want to call getRoute, but we still want to call
+    // updateUser for updating the last user activity timestamp.
+    if (!preventRouteDurationMeasurement) {
+      route = await getRoute(location);
+      if (!route) {
+        return;
+      }
+      duration = (route as any)?.routes[0].duration; // in seconds
+      status = calculateStatus(duration);
+      time = formatTime(duration);
     }
-    const duration = (route as any)?.routes[0].duration; // in seconds
-    const status = calculateStatus(duration);
-    const time = formatTime(duration);
+
     await updateUser(userUid, brigadesIds, { status, time });
   } catch (error) {
     console.error(error);
