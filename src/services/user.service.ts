@@ -7,6 +7,11 @@ interface UserDataUpdate {
   time?: string;
 }
 
+interface UpdateUserBody {
+  brigadesIds: string[];
+  data: UserDataUpdate;
+}
+
 export const updateUser = async (
   userUid: string,
   brigadesIds: string[],
@@ -30,3 +35,30 @@ export const updateUser = async (
 
   await db.collection("users").doc(userUid).update(updateObj);
 };
+
+const handleUpdate = async (userUid: string, userData: UpdateUserBody) => {
+  const { brigadesIds, data } = userData;
+  try {
+    await updateUser(userUid, brigadesIds, data);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export async function update(userUid: string, userData: UpdateUserBody) {
+  // This async function is intended to be synchronous here because we don't
+  // want to wait for the update. Calculations and update db should be done
+  // in the background
+  if (userUid && userData) {
+    handleUpdate(userUid, userData);
+  } else {
+    console.error("Missing user data:", {
+      userUid,
+      userData,
+    });
+  }
+
+  const message = `User (${userUid}) data update`;
+
+  return { message };
+}

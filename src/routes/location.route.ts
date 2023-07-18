@@ -8,7 +8,7 @@ router.put("/:userUid", async (req, res, next) => {
     console.log(`/location/${req.params.userUid}`);
     res.json(await locationService.update(req.params.userUid, req.body));
   } catch (err) {
-    console.error(`Error while updating programming language`, err);
+    console.error(`Error while updating user location`, err);
     next(err);
   }
 });
