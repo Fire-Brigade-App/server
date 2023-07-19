@@ -34,7 +34,7 @@ export const updateUser = async (
     });
   }
 
-  let activityToUpdate = activity;
+  let activityToUpdate = activity || Activity.OFFLINE;
   if (status && [Status.NEAR, Status.FAR, Status.OUT].includes(status)) {
     activityToUpdate = Activity.ONLINE;
   }
