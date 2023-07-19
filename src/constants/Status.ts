@@ -1,17 +1,13 @@
 export enum Status {
-  // calculated time if user is in standby mode
+  // calculated time if user is in standby mode and "online" Activity
   NEAR = "near", // green <5 min
   FAR = "far", // yellow 5<=10 min
   OUT = "out", // orange >10 min
 
-  // user is in busy mode
-  BUSY = "busy", // red
+  // for "busy", "offline" and "inactive" Activity
+  EMPTY = "EMPTY", //
 
-  // if last user update was in standby mode
-  OFFLINE = "offline", // grey - no updates from 1<24 h
-  INACTIVE = "inactive", // black - no updates from >24 h
-
-  //
+  // user status in the fire brigade
   CANDIDATE = "candidate",
   SUSPENDED = "suspended",
 }

@@ -1,8 +1,10 @@
 import { Timestamp } from "firebase-admin/firestore";
 import { Status } from "../constants/Status";
 import { db } from "./db.service";
+import { Activity } from "../constants/Activity";
 
 interface UserDataUpdate {
+  activity?: Activity;
   status?: Status;
   time?: string;
 }
@@ -14,21 +16,29 @@ interface UpdateUserBody {
 
 export const updateUser = async (
   userUid: string,
-  brigadesIds: string[],
-  data: UserDataUpdate
+  data: UserDataUpdate,
+  brigadesIds?: string[]
 ) => {
-  const { status, time } = data;
+  const { activity, status, time } = data;
   const updateObj: any = {};
 
-  brigadesIds.forEach((brigadeId) => {
-    if (status) {
-      updateObj[`brigades.${brigadeId}.status`] = status;
-    }
+  if (brigadesIds) {
+    brigadesIds.forEach((brigadeId) => {
+      if (status) {
+        updateObj[`brigades.${brigadeId}.status`] = status;
+      }
 
-    if (time) {
-      updateObj[`brigades.${brigadeId}.time`] = time;
-    }
-  });
+      if (time) {
+        updateObj[`brigades.${brigadeId}.time`] = time;
+      }
+    });
+  }
+
+  let activityToUpdate = activity;
+  if (status && [Status.NEAR, Status.FAR, Status.OUT].includes(status)) {
+    activityToUpdate = Activity.ONLINE;
+  }
+  updateObj.activity = activityToUpdate;
 
   const updated = Timestamp.fromDate(new Date());
   updateObj.updated = updated;
@@ -39,7 +49,7 @@ export const updateUser = async (
 const handleUpdate = async (userUid: string, userData: UpdateUserBody) => {
   const { brigadesIds, data } = userData;
   try {
-    await updateUser(userUid, brigadesIds, data);
+    await updateUser(userUid, data, brigadesIds);
   } catch (error) {
     console.error(error);
   }

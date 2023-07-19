@@ -3,6 +3,7 @@ import "./config/firebase";
 import express from "express";
 import usersRouter from "./routes/users.route";
 import locationRouter from "./routes/location.route";
+import { updateActivityInIntervals } from "./services/activity.service";
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -25,3 +26,5 @@ try {
 } catch (error) {
   console.error(`Error occured: ${error}`);
 }
+
+updateActivityInIntervals(Number(process.env.UPDATE_ACTIVITY_INTERVAL) || 15);

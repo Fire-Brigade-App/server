@@ -1,3 +1,4 @@
+import { Activity } from "../constants/Activity";
 import { LocationObject } from "../types/LocationObject";
 import { calculateStatus } from "../utils/status";
 import { formatTime } from "../utils/time";
@@ -8,7 +9,7 @@ const handleUpdate = async (userUid: string, location: LocationObject) => {
   const { brigadesIds, preventRouteDurationMeasurement } = location;
 
   try {
-    let route, duration, status, time;
+    let route, duration, status, time, activity;
 
     // In some cases, i.e. when the user location is very similar to the
     // previous one, we don't want to call getRoute, but we still want to call
@@ -18,12 +19,13 @@ const handleUpdate = async (userUid: string, location: LocationObject) => {
       if (!route) {
         return;
       }
+      activity = Activity.ONLINE;
       duration = (route as any)?.routes[0].duration; // in seconds
       status = calculateStatus(duration);
       time = formatTime(duration);
     }
 
-    await updateUser(userUid, brigadesIds, { status, time });
+    await updateUser(userUid, { activity, status, time }, brigadesIds);
   } catch (error) {
     console.error(error);
   }
