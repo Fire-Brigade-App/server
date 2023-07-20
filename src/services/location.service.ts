@@ -19,11 +19,12 @@ const handleUpdate = async (userUid: string, location: LocationObject) => {
       if (!route) {
         return;
       }
-      activity = Activity.ONLINE;
       duration = (route as any)?.routes[0].duration; // in seconds
       status = calculateStatus(duration);
       time = formatTime(duration);
     }
+
+    activity = Activity.ONLINE;
 
     await updateUser(userUid, { activity, status, time }, brigadesIds);
   } catch (error) {
