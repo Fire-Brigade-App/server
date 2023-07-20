@@ -1,7 +1,6 @@
 import "dotenv/config";
 import "./config/firebase";
 import express from "express";
-import usersRouter from "./routes/users.route";
 import locationRouter from "./routes/location.route";
 import { updateActivityInIntervals } from "./services/activity.service";
 
@@ -16,7 +15,6 @@ app.get("/", (req, res) => {
   res.json({ message: "ok" });
 });
 
-app.use("/users", usersRouter);
 app.use("/location", locationRouter);
 
 try {
