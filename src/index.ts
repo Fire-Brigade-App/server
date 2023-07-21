@@ -2,6 +2,7 @@ import "dotenv/config";
 import "./config/firebase";
 import express from "express";
 import locationRouter from "./routes/location.route";
+import alertsRouter from "./routes/alerts.route";
 import { updateActivityInIntervals } from "./services/activity.service";
 
 const app = express();
@@ -16,6 +17,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/location", locationRouter);
+app.use("/alerts", alertsRouter);
 
 try {
   app.listen(port, () =>
