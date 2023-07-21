@@ -59,14 +59,13 @@ const updateActivityToInactive = async () => {
   // After 24 hours without activity set status to "inactive"
   await updateActivity(60 * 24, Activity.INACTIVE, [
     Activity.ONLINE,
-    Activity.BUSY,
     Activity.OFFLINE,
   ]);
 };
 
 const updateActivityToOffline = async () => {
   // After 60 minutes without activity set status to "offline"
-  await updateActivity(60, Activity.OFFLINE, [Activity.ONLINE, Activity.BUSY]);
+  await updateActivity(60, Activity.OFFLINE, [Activity.ONLINE]);
 };
 
 let UPDATE_STATUSES_TIMER: NodeJS.Timer;
