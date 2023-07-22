@@ -37,17 +37,7 @@ const updateActivity = async (
   );
 
   users.forEach((user) => {
-    const brigadesIds = user.data?.brigades
-      ? Object.keys(user.data?.brigades)
-      : [];
-
-    brigadesIds.forEach((brigadeId) => {
-      batch.update(user.ref, {
-        activity,
-        [`brigades.${brigadeId}.status`]: "empty",
-        [`brigades.${brigadeId}.time`]: "0:0:0",
-      });
-    });
+    batch.update(user.ref, { activity });
   });
 
   console.log(`${users.length} users has updated activity to ${activity}`);
