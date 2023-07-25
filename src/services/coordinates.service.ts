@@ -24,8 +24,8 @@ export const fromAddressToCoordinates = async (address: string) => {
       console.log(place);
 
       coordinates = new GeoPoint(
-        Number(place?.lat) || 0,
-        Number(place?.lon) || 0
+        +(+place?.lat).toFixed(6) || 0,
+        +(+place?.lon).toFixed(6) || 0
       );
     }
   } catch (error) {

@@ -3,7 +3,7 @@ import { db } from "./db.service";
 import { fromAddressToCoordinates } from "./coordinates.service";
 import { BrigadeStatus } from "../constants/BrigadeStatus";
 
-const handleAdd = async (brigadeId: string, alert: any) => {
+export const handleAddAlert = async (brigadeId: string, alert: any) => {
   try {
     const added = alert.added || Timestamp.fromDate(new Date());
     const address = alert.address || "";
@@ -11,6 +11,7 @@ const handleAdd = async (brigadeId: string, alert: any) => {
     const municipality = alert.municipality || "";
     const description = alert.description || "";
     const type = alert.type || "";
+    const author = alert.author || "";
     const source = alert.source || "";
     const vehicles = alert.vehicles || [];
     const completed = null;
@@ -31,6 +32,7 @@ const handleAdd = async (brigadeId: string, alert: any) => {
       location,
       description,
       type,
+      author,
       source,
       vehicles,
       completed,
@@ -73,7 +75,7 @@ const handleAdd = async (brigadeId: string, alert: any) => {
 
 export async function add(brigadeId: string, alert: any) {
   if (alert) {
-    handleAdd(brigadeId, alert);
+    handleAddAlert(brigadeId, alert);
   } else {
     console.error("Missing alert data:", {
       alert,

@@ -7,3 +7,5 @@ export const formatTime = (duration: number) => {
 
   return `${hours}:${minutes}:${showSeconds ? seconds : 0}`;
 };
+
+export const wait = (ms: number) => new Promise((res) => setTimeout(res, ms));

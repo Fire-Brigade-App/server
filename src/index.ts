@@ -1,8 +1,9 @@
 import "dotenv/config";
 import "./config/firebase";
 import express from "express";
-import locationRouter from "./routes/location.route";
 import alertsRouter from "./routes/alerts.route";
+import eremizaRouter from "./routes/eremiza.route";
+import locationRouter from "./routes/location.route";
 import { updateActivityInIntervals } from "./services/activity.service";
 
 const app = express();
@@ -16,8 +17,9 @@ app.get("/", (req, res) => {
   res.json({ message: "ok" });
 });
 
-app.use("/location", locationRouter);
 app.use("/alerts", alertsRouter);
+app.use("/eremiza", eremizaRouter);
+app.use("/location", locationRouter);
 
 try {
   app.listen(port, () =>
