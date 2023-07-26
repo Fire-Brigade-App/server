@@ -15,9 +15,7 @@ export const handleAddAlert = async (brigadeId: string, alert: any) => {
     const source = alert.source || "";
     const vehicles = alert.vehicles || [];
     const completed = null;
-    const confirmedBy: string[] = [];
-    const onTheWay: string[] = [];
-    const rejectedBy: string[] = [];
+    const users = {};
     let location = alert.location || null;
 
     if (!location && address) {
@@ -36,9 +34,7 @@ export const handleAddAlert = async (brigadeId: string, alert: any) => {
       source,
       vehicles,
       completed,
-      confirmedBy,
-      onTheWay,
-      rejectedBy,
+      users,
     };
 
     const alertResponse = await db
