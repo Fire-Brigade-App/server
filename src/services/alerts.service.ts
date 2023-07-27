@@ -2,15 +2,20 @@ import { Timestamp } from "firebase-admin/firestore";
 import { db } from "./db.service";
 import { fromAddressToCoordinates } from "./coordinates.service";
 import { BrigadeStatus } from "../constants/BrigadeStatus";
+import { AlertType } from "../constants/AlertType";
 
-export const handleAddAlert = async (brigadeId: string, alert: any) => {
+export const handleAddAlert = async (
+  brigadeId: string,
+  alert: any,
+  temporaryAlert?: string
+) => {
   try {
     const added = alert.added || Timestamp.fromDate(new Date());
     const address = alert.address || "";
     const country = alert.country || "";
     const municipality = alert.municipality || "";
     const description = alert.description || "";
-    const type = alert.type || "";
+    const type = alert.type || AlertType.ALERT;
     const author = alert.author || "";
     const source = alert.source || "";
     const vehicles = alert.vehicles || [];
@@ -34,20 +39,30 @@ export const handleAddAlert = async (brigadeId: string, alert: any) => {
       source,
       vehicles,
       completed,
-      users,
     };
 
-    const alertResponse = await db
-      .collection("brigades")
-      .doc(brigadeId)
-      .collection("alerts")
-      .add(newAlert);
+    let alertResponse;
 
-    if (!alertResponse.id) {
+    if (temporaryAlert) {
+      await db
+        .collection("brigades")
+        .doc(brigadeId)
+        .collection("alerts")
+        .doc(temporaryAlert)
+        .update(newAlert);
+    } else {
+      alertResponse = await db
+        .collection("brigades")
+        .doc(brigadeId)
+        .collection("alerts")
+        .add({ ...newAlert, users });
+    }
+
+    if (!temporaryAlert && !alertResponse?.id) {
       throw new Error();
     }
 
-    console.log("Added new alert: ", alertResponse.id);
+    console.log("Added new alert: ", alertResponse?.id);
 
     const brigadeResponse = await db
       .collection("brigades")
@@ -64,6 +79,8 @@ export const handleAddAlert = async (brigadeId: string, alert: any) => {
 
     // TODO:
     // send notifications here
+
+    return alertResponse?.id;
   } catch (error) {
     console.error(error);
   }

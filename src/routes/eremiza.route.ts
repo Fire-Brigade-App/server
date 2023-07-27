@@ -13,4 +13,14 @@ router.get("/:brigadeId", async (req, res, next) => {
   }
 });
 
+router.post("/:brigadeId", async (req, res, next) => {
+  try {
+    console.log(`/eremiza/${req.params.brigadeId} post`);
+    res.json(await eremizaService.fetch(req.params.brigadeId, req.body));
+  } catch (err) {
+    console.error(`Error while adding alert`, err);
+    next(err);
+  }
+});
+
 export default router;

@@ -1,16 +1,18 @@
 import { Timestamp, GeoPoint } from "firebase-admin/firestore";
 import { AlertType } from "../constants/AlertType";
+import { UserStatusInAlert } from "../constants/UserStatusInAlarm";
 
 export interface Alert {
-  added: Timestamp;
-  address: string;
-  type: AlertType;
+  added?: Timestamp;
+  address?: string;
+  type?: AlertType;
   description: string;
-  vehicles: string[];
-  completed: Timestamp | null;
-  confirmedBy: string[];
-  rejectedBy: string[];
-  onTheWay: string[];
-  location: GeoPoint;
+  vehicles?: string[];
+  completed?: Timestamp | null;
+  users?: {
+    [userUid: string]: UserStatusInAlert;
+  };
+  location?: GeoPoint;
   source: string;
+  author: string;
 }

@@ -5,4 +5,5 @@ export enum AlertType {
   FALSE = "false",
   PLANNED = "planned",
   TRAINING = "training",
+  ALERT = "alert",
 }

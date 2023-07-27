@@ -6,6 +6,7 @@ import { wait } from "../utils/time";
 import { convertERemizaDateToDate } from "../utils/date";
 import { handleAddAlert } from "./alerts.service";
 import { AlertType } from "../constants/AlertType";
+import { Alert } from "../types/Alert";
 
 const LOGIN_PAGE_URL = "https://e-remiza.pl/OSP.UI.SSO/logowanie";
 const ALERTS_PAGE_URL = "https://e-remiza.pl/OSP.UI.EREMIZA/alarmy";
@@ -28,11 +29,11 @@ const alertTypesMap = {
   P: AlertType.FIRE,
   MZ: AlertType.THREAT,
   CW: AlertType.TRAINING,
-  Alarm: null,
-  TGB: null,
+  Alarm: AlertType.ALERT,
+  TGB: AlertType.ALERT,
 };
 
-const fetchLastAlert = async (brigadeId: string) => {
+const fetchLastAlert = async (brigadeId: string, initialAlert?: Alert) => {
   try {
     console.log("Start fetching last alert from e-remiza for", brigadeId);
 
@@ -44,6 +45,26 @@ const fetchLastAlert = async (brigadeId: string) => {
 
     // Push brigade id to cache to avoid addtional fetching alerts
     brigadesWithActiveAlertFetching.add(brigadeId);
+
+    let temporaryAlert = null;
+    // If initialAlert argument exist (only for post requests) create temporary alert
+    if (initialAlert) {
+      const { description, address, author } = initialAlert;
+
+      const added = Timestamp.fromDate(new Date());
+
+      const newAlert = {
+        added,
+        type: null,
+        address,
+        location: null,
+        description,
+        author,
+        source: "user",
+      };
+
+      temporaryAlert = await handleAddAlert(brigadeId, newAlert);
+    }
 
     // Get e-Remiza credentials from database
     const brigade = await db.collection("brigades").doc(brigadeId).get();
@@ -196,7 +217,11 @@ const fetchLastAlert = async (brigadeId: string) => {
         source: "e-remiza",
       };
 
-      await handleAddAlert(brigadeId, newAlert);
+      if (temporaryAlert) {
+        await handleAddAlert(brigadeId, newAlert, temporaryAlert);
+      } else {
+        await handleAddAlert(brigadeId, newAlert);
+      }
     }
 
     setTimeout(() => {
@@ -209,11 +234,11 @@ const fetchLastAlert = async (brigadeId: string) => {
   }
 };
 
-export async function fetch(brigadeId: string) {
+export async function fetch(brigadeId: string, alert?: Alert) {
   // This async function is intended to be synchronous here because we don't
   // want to wait for the update. Calculations and update db should be done
   // in the background
-  fetchLastAlert(brigadeId);
+  fetchLastAlert(brigadeId, alert);
 
   return { message: "Fetching last alert from e-Remiza initialized" };
 }
