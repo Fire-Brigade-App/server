@@ -12,7 +12,7 @@ export interface Alert {
   users?: {
     [userUid: string]: UserStatusInAlert;
   };
-  location?: GeoPoint;
+  location?: GeoPoint | null;
   source: string;
   author: string;
 }

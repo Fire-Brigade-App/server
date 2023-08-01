@@ -5,7 +5,7 @@ export enum Status {
   OUT = "out", // orange >10 min
 
   // for "busy", "offline" and "inactive" Activity
-  EMPTY = "EMPTY", //
+  EMPTY = "empty", //
 
   // user status in the fire brigade
   CANDIDATE = "candidate",

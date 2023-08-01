@@ -55,9 +55,7 @@ const fetchLastAlert = async (brigadeId: string, initialAlert?: Alert) => {
 
       const newAlert = {
         added,
-        type: null,
         address,
-        location: null,
         description,
         author,
         source: "user",

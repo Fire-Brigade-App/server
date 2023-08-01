@@ -3,10 +3,12 @@ import { db } from "./db.service";
 import { fromAddressToCoordinates } from "./coordinates.service";
 import { BrigadeStatus } from "../constants/BrigadeStatus";
 import { AlertType } from "../constants/AlertType";
+import { Alert } from "../types/Alert";
+import { sendNotificationsAboutAlert } from "./messaging.service";
 
 export const handleAddAlert = async (
   brigadeId: string,
-  alert: any,
+  alert: Alert & { country?: string; municipality?: string },
   temporaryAlert?: string
 ) => {
   try {
@@ -77,8 +79,8 @@ export const handleAddAlert = async (
       throw new Error();
     }
 
-    // TODO:
-    // send notifications here
+    // Sendind notifications to the firefighters
+    sendNotificationsAboutAlert(brigadeId, newAlert);
 
     return alertResponse?.id;
   } catch (error) {

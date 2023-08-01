@@ -16,12 +16,8 @@ export const fromAddressToCoordinates = async (address: string) => {
     const result = await axios.get(COORDINATES_URL_SERVICE, { params });
     const response = result.data;
 
-    console.log(response);
-
     if (response?.length) {
       const place = response[0];
-
-      console.log(place);
 
       coordinates = new GeoPoint(
         +(+place?.lat).toFixed(6) || 0,
